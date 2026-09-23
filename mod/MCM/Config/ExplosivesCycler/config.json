@@ -1,0 +1,231 @@
+{
+    "modName": "ExplosivesCycler",
+    "displayName": "$EXC_MOD_NAME",
+    "minMcmVersion": 2,
+    "pluginRequirements": [
+        "ExplosivesCycler.esp"
+    ],
+    "content": [
+        {
+            "type": "text",
+            "text": "$EXC_ABOUT"
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "section",
+            "text": "$EXC_SEC_KEYS"
+        },
+        {
+            "id": "NextListHotkey",
+            "type": "hotkey",
+            "text": "$EXC_KEY_NEXT_LIST",
+            "help": "$EXC_KEY_NEXT_LIST_HELP"
+        },
+        {
+            "id": "PrevListHotkey",
+            "type": "hotkey",
+            "text": "$EXC_KEY_PREV_LIST",
+            "help": "$EXC_KEY_PREV_LIST_HELP"
+        },
+        {
+            "id": "NextItemHotkey",
+            "type": "hotkey",
+            "text": "$EXC_KEY_NEXT_ITEM",
+            "help": "$EXC_KEY_NEXT_ITEM_HELP"
+        },
+        {
+            "id": "PrevItemHotkey",
+            "type": "hotkey",
+            "text": "$EXC_KEY_PREV_ITEM",
+            "help": "$EXC_KEY_PREV_ITEM_HELP"
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "section",
+            "text": "$EXC_SEC_BEHAVIOR"
+        },
+        {
+            "id": "bAutoNext:Main",
+            "type": "switcher",
+            "text": "$EXC_AUTO_NEXT",
+            "help": "$EXC_AUTO_NEXT_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingBool"
+            }
+        },
+        {
+            "id": "bEquipPickup:Main",
+            "type": "switcher",
+            "text": "$EXC_EQUIP_PICKUP",
+            "help": "$EXC_EQUIP_PICKUP_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingBool"
+            }
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "section",
+            "text": "$EXC_SEC_DISPLAY"
+        },
+        {
+            "id": "iDisplay:Main",
+            "type": "dropdown",
+            "text": "$EXC_DISPLAY",
+            "help": "$EXC_DISPLAY_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingInt",
+                "options": [
+                    "$EXC_DISPLAY_OFF",
+                    "$EXC_DISPLAY_NOTIFY",
+                    "$EXC_DISPLAY_LINE",
+                    "$EXC_DISPLAY_BOTH"
+                ]
+            }
+        },
+        {
+            "id": "bShowCount:Main",
+            "type": "switcher",
+            "text": "$EXC_SHOW_COUNT",
+            "help": "$EXC_SHOW_COUNT_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingBool"
+            }
+        },
+        {
+            "id": "fHideAfter:Main",
+            "type": "slider",
+            "text": "$EXC_HIDE_AFTER",
+            "help": "$EXC_HIDE_AFTER_HELP",
+            "valueOptions": {
+                "min": 0,
+                "max": 30,
+                "step": 0.5,
+                "sourceType": "ModSettingFloat"
+            }
+        },
+        {
+            "id": "fPosX:Main",
+            "type": "slider",
+            "text": "$EXC_POS_X",
+            "help": "$EXC_POS_X_HELP",
+            "valueOptions": {
+                "min": 0,
+                "max": 100,
+                "step": 0.5,
+                "sourceType": "ModSettingFloat"
+            }
+        },
+        {
+            "id": "fPosY:Main",
+            "type": "slider",
+            "text": "$EXC_POS_Y",
+            "help": "$EXC_POS_Y_HELP",
+            "valueOptions": {
+                "min": 0,
+                "max": 100,
+                "step": 0.5,
+                "sourceType": "ModSettingFloat"
+            }
+        },
+        {
+            "id": "iAlign:Main",
+            "type": "dropdown",
+            "text": "$EXC_ALIGN",
+            "help": "$EXC_ALIGN_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingInt",
+                "options": [
+                    "$EXC_ALIGN_LEFT",
+                    "$EXC_ALIGN_CENTER",
+                    "$EXC_ALIGN_RIGHT"
+                ]
+            }
+        },
+        {
+            "id": "iFontSize:Main",
+            "type": "slider",
+            "text": "$EXC_FONT_SIZE",
+            "help": "$EXC_FONT_SIZE_HELP",
+            "valueOptions": {
+                "min": 12,
+                "max": 48,
+                "step": 1,
+                "sourceType": "ModSettingInt"
+            }
+        },
+        {
+            "id": "iColor:Main",
+            "type": "dropdown",
+            "text": "$EXC_COLOR",
+            "help": "$EXC_COLOR_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingInt",
+                "options": [
+                    "$EXC_COLOR_HUD",
+                    "$EXC_COLOR_WHITE",
+                    "$EXC_COLOR_AMBER",
+                    "$EXC_COLOR_BLUE",
+                    "$EXC_COLOR_RED"
+                ]
+            }
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "section",
+            "text": "$EXC_SEC_LISTS"
+        },
+        {
+            "type": "button",
+            "text": "$EXC_RELOAD",
+            "help": "$EXC_RELOAD_HELP",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "McmReloadLists",
+                "params": []
+            }
+        },
+        {
+            "type": "button",
+            "text": "$EXC_GIVE_ITEM",
+            "help": "$EXC_GIVE_ITEM_HELP",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "McmGiveItem",
+                "params": []
+            }
+        },
+        {
+            "type": "spacer"
+        },
+        {
+            "type": "section",
+            "text": "$EXC_SEC_DEBUG"
+        },
+        {
+            "id": "iLogLevel:Main",
+            "type": "dropdown",
+            "text": "$EXC_LOG_LEVEL",
+            "help": "$EXC_LOG_LEVEL_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingInt",
+                "options": [
+                    "$EXC_LOG_OFF",
+                    "$EXC_LOG_NORMAL",
+                    "$EXC_LOG_DEBUG"
+                ]
+            }
+        }
+    ]
+}

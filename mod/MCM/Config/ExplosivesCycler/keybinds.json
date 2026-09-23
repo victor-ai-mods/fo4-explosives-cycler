@@ -1,0 +1,49 @@
+{
+    "modName": "ExplosivesCycler",
+    "keybinds": [
+        {
+            "id": "NextListHotkey",
+            "desc": "$EXC_KEY_NEXT_LIST",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "NextList",
+                "params": []
+            }
+        },
+        {
+            "id": "PrevListHotkey",
+            "desc": "$EXC_KEY_PREV_LIST",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "PrevList",
+                "params": []
+            }
+        },
+        {
+            "id": "NextItemHotkey",
+            "desc": "$EXC_KEY_NEXT_ITEM",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "NextItem",
+                "params": []
+            }
+        },
+        {
+            "id": "PrevItemHotkey",
+            "desc": "$EXC_KEY_PREV_ITEM",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "PrevItem",
+                "params": []
+            }
+        }
+    ]
+}

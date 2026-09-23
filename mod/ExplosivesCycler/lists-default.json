@@ -1,0 +1,103 @@
+{
+    "_comment": "Explosives Cycler: up to 10 lists, cycled in this order. Lists after the 10th are ignored.",
+    "_comment": "This file is overwritten by mod updates. To change the lists, copy it to lists-user.json in this folder and edit the copy: if lists-user.json exists, this file is not read at all.",
+    "_comment": "Format: one key per line, one item per line, item = Plugin.esm|LocalHexID (as in LootMan). Items from plugins you do not have (DLC) are skipped.",
+    "_comment": "List name: name_<language> by sLanguage from Fallout4.ini (name_en, name_ru, name_de ...), falls back to name_en.",
+    "_comment": "The notification is: Item (list name). An empty list name shows the item alone.",
+    "_comment": "Reload in MCM: Explosives Cycler - Reload lists.",
+
+    "_comment": "Fallout4.esm|10C3C6 = Molotov Cocktail / Бутылка с коктейлем Молотова (damage 50)",
+    "_comment": "Fallout4.esm|107BD6 = Baseball Grenade / Граната из бейсбольного мяча (damage 100)",
+    "_comment": "Fallout4.esm|10C669 = Cryo Mine / Криомина (damage 100)",
+    "_comment": "Fallout4.esm|0E56C2 = Fragmentation Mine / Осколочная мина (damage 100)",
+    "_comment": "Fallout4.esm|0FF21D = Cryogenic Grenade / Криогенная граната (damage 100)",
+    "_comment": "Fallout4.esm|0EEBED = Fragmentation Grenade / Осколочная граната (damage 150)",
+    "_comment": "DLCNukaWorld.esm|0346FC = Smart Fragmentation Grenade / \"Умная\" осколочная граната (damage 150)",
+    "_comment": "Fallout4.esm|18325E = Institute EM Pulse Grenade / Институтская импульсная граната (damage 150)",
+    "_comment": "Fallout4.esm|0FF21F = Pulse Grenade / Импульсная граната (damage 150)",
+    "_comment": "Fallout4.esm|10A344 = Pulse Mine / Импульсная мина (damage 150)",
+    "_comment": "DLCRobot.esm|002120 = Pulse Mine / Импульсная мина (damage 165)",
+    "_comment": "DLCNukaWorld.esm|040CDD = Nuka Cherry Grenade / Граната с \"Ядер-Вишней\" (damage 200)",
+    "_comment": "DLCNukaWorld.esm|040CDE = Nuka Quantum Grenade / Граната с \"Квантовой Ядер-Колой\" (damage 300)",
+    "_comment": "Fallout4.esm|10771F = Bottlecap Mine / Крышко-мина (damage 300)",
+    "_comment": "Fallout4.esm|10A342 = Plasma Mine / Плазменная мина (damage 300)",
+    "_comment": "Fallout4.esm|10A33D = Plasma Grenade / Плазменная граната (damage 300)",
+    "_comment": "Fallout4.esm|0E5750 = Nuka Grenade / Молотов-кола (damage 310)",
+    "_comment": "Fallout4.esm|10A340 = Nuke Mine / Ядерная мина (damage 310)",
+    "_comment": "DLCNukaWorld.esm|033905 = Fragmentation Grenade MIRV / Разделяющаяся осколочная граната (damage 750)",
+
+    "lists": [
+        {
+            "_comment": "Weak grenades: ascending damage, no Molotov cocktail",
+            "name_en": "–",
+            "name_ru": "–",
+            "items": [
+                "Fallout4.esm|107BD6",
+                "Fallout4.esm|0FF21D",
+                "Fallout4.esm|0EEBED",
+                "DLCNukaWorld.esm|0346FC",
+                "Fallout4.esm|18325E",
+                "Fallout4.esm|0FF21F",
+                "DLCNukaWorld.esm|040CDD",
+                "DLCNukaWorld.esm|040CDE",
+                "Fallout4.esm|10A33D",
+                "Fallout4.esm|0E5750",
+                "DLCNukaWorld.esm|033905"
+            ]
+        },
+        {
+            "_comment": "Weak mines: ascending damage",
+            "name_en": "–",
+            "name_ru": "–",
+            "items": [
+                "Fallout4.esm|10C669",
+                "Fallout4.esm|0E56C2",
+                "Fallout4.esm|10A344",
+                "DLCRobot.esm|002120",
+                "Fallout4.esm|10771F",
+                "Fallout4.esm|10A342",
+                "Fallout4.esm|10A340"
+            ]
+        },
+        {
+            "_comment": "Strong grenades: descending damage, no Molotov cocktail",
+            "name_en": "+",
+            "name_ru": "+",
+            "items": [
+                "DLCNukaWorld.esm|033905",
+                "Fallout4.esm|0E5750",
+                "Fallout4.esm|10A33D",
+                "DLCNukaWorld.esm|040CDE",
+                "DLCNukaWorld.esm|040CDD",
+                "Fallout4.esm|18325E",
+                "Fallout4.esm|0FF21F",
+                "DLCNukaWorld.esm|0346FC",
+                "Fallout4.esm|0EEBED",
+                "Fallout4.esm|0FF21D",
+                "Fallout4.esm|107BD6"
+            ]
+        },
+        {
+            "_comment": "Strong mines: descending damage",
+            "name_en": "+",
+            "name_ru": "+",
+            "items": [
+                "Fallout4.esm|10A340",
+                "Fallout4.esm|10A342",
+                "Fallout4.esm|10771F",
+                "DLCRobot.esm|002120",
+                "Fallout4.esm|10A344",
+                "Fallout4.esm|10C669",
+                "Fallout4.esm|0E56C2"
+            ]
+        },
+        {
+            "_comment": "Molotov cocktail",
+            "name_en": "",
+            "name_ru": "",
+            "items": [
+                "Fallout4.esm|10C3C6"
+            ]
+        }
+    ]
+}

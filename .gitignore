@@ -1,0 +1,14 @@
+# Сгенерированное: esp из tools/gen_esp.py, .pex из PapyrusCompiler
+build/
+
+# Данные, извлечённые из файлов игры (tools/scan_explosives.py)
+data/explosives.json
+
+# Логи, временные файлы
+*.log
+__pycache__/
+*.pyc
+
+# Материалы страницы на Nexus
+release/
+images/
