@@ -44,16 +44,17 @@ def main():
     mines = [e for e in data if e['type'] == 'mine']
     molotov = [e for e in data if e['id'] == MOLOTOV]
 
-    # Название списка — короткая метка после имени предмета: «Осколочная граната (–)».
-    # Пустое название — только имя предмета (у Молотова один предмет, метка лишняя).
-    # Решение пользователя 2026-09-23: «–» слабые, «+» мощные; стрелок и ▲ в шрифте
-    # уведомлений (Roboto Condensed из fonts_en.swf) нет.
+    # Название списка стоит перед именем предмета: «[grenade] Осколочная граната ×8».
+    # Метки [grenade] / [mine] / [molotov] строка на экране рисует значками (из
+    # уведомлений они убираются). Решение пользователя 2026-09-23: слабые — один
+    # значок, мощные — два, у Молотова — значок молотова.
+    G, M = '[grenade]', '[mine]'
     lists = [
-        ('Weak grenades: ascending damage, no Molotov cocktail', '–', '–', by_damage(grenades)),
-        ('Weak mines: ascending damage', '–', '–', by_damage(mines)),
-        ('Strong grenades: descending damage, no Molotov cocktail', '+', '+', by_damage(grenades, reverse=True)),
-        ('Strong mines: descending damage', '+', '+', by_damage(mines, reverse=True)),
-        ('Molotov cocktail', '', '', molotov),
+        ('Weak grenades: ascending damage, no Molotov cocktail', G, G, by_damage(grenades)),
+        ('Weak mines: ascending damage', M, M, by_damage(mines)),
+        ('Strong grenades: descending damage, no Molotov cocktail', G + G, G + G, by_damage(grenades, reverse=True)),
+        ('Strong mines: descending damage', M + M, M + M, by_damage(mines, reverse=True)),
+        ('Molotov cocktail', '[molotov]', '[molotov]', molotov),
     ]
 
     out = ['{',
@@ -61,7 +62,8 @@ def main():
            '    "_comment": "This file is overwritten by mod updates. To change the lists, copy it to lists-user.json in this folder and edit the copy: if lists-user.json exists, this file is not read at all.",',
            '    "_comment": "Format: one key per line, one item per line, item = Plugin.esm|LocalHexID (as in LootMan). Items from plugins you do not have (DLC) are skipped.",',
            '    "_comment": "List name: name_<language> by sLanguage from Fallout4.ini (name_en, name_ru, name_de ...), falls back to name_en.",',
-           '    "_comment": "The notification is: Item (list name). An empty list name shows the item alone.",',
+           '    "_comment": "The line is: List name Item x5. An empty list name shows the item alone.",',
+           '    "_comment": "Icons in a list name: [grenade], [mine], [molotov] (lowercase), e.g. [grenade][grenade]. Game notifications cannot show icons and drop them.",',
            '    "_comment": "Reload in MCM: Explosives Cycler - Reload lists.",',
            '']
     seen = set()
@@ -91,7 +93,7 @@ def main():
     with open(DST, 'w', encoding='utf-8', newline='\r\n') as f:
         f.write(text)
     for about, name_en, name_ru, items in lists:
-        print('%-3s %s' % (name_ru,', '.join('%s(%g)' % (e['name_ru'], e['damage']) for e in items)))
+        print('%-18s %s' % (name_ru,', '.join('%s(%g)' % (e['name_ru'], e['damage']) for e in items)))
     print('->', os.path.relpath(DST, ROOT))
 
 

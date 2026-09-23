@@ -51,7 +51,7 @@ STRINGS = {
         'DISPLAY_LINE': 'On-screen line',
         'DISPLAY_BOTH': 'Line and notifications',
         'SHOW_COUNT': 'Show the count',
-        'SHOW_COUNT_HELP': 'How many of the equipped explosive you carry: "Frag Grenade ×8 (–)". Updated after every throw.',
+        'SHOW_COUNT_HELP': 'How many of the equipped explosive you carry: "Frag Grenade ×8". Updated after every throw.',
         'HIDE_AFTER': 'Hide the line after, s',
         'HIDE_AFTER_HELP': '0 - never hide: the line always shows the current item.',
         'POS_X': 'Position X, % of screen width',
@@ -113,7 +113,7 @@ STRINGS = {
         'DISPLAY_LINE': 'Строкой на экране',
         'DISPLAY_BOTH': 'Строкой и уведомлениями',
         'SHOW_COUNT': 'Показывать количество',
-        'SHOW_COUNT_HELP': 'Сколько экипированной взрывчатки в инвентаре: «Осколочная граната ×8 (–)». Число обновляется после каждого броска.',
+        'SHOW_COUNT_HELP': 'Сколько экипированной взрывчатки в инвентаре: «Осколочная граната ×8». Число обновляется после каждого броска.',
         'HIDE_AFTER': 'Скрывать строку через, с',
         'HIDE_AFTER_HELP': '0 — не скрывать: строка всегда показывает текущий предмет.',
         'POS_X': 'Положение X, % ширины экрана',
@@ -161,14 +161,14 @@ SETTINGS = [
     ('bShowCount', 1),
     ('iLogLevel', 1),
     ('iDisplay', 2),
-    ('iAlign', 2),
+    ('iAlign', 0),
     ('iFontSize', 22),
     ('iColor', 0),
 ]
 SETTINGS_FLOAT = [
     ('fHideAfter', 0.0),
-    ('fPosX', 98.0),
-    ('fPosY', 64.5),
+    ('fPosX', 1.0),
+    ('fPosY', 95.5),
 ]
 
 

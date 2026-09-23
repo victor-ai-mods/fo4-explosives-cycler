@@ -3,7 +3,8 @@
     "_comment": "This file is overwritten by mod updates. To change the lists, copy it to lists-user.json in this folder and edit the copy: if lists-user.json exists, this file is not read at all.",
     "_comment": "Format: one key per line, one item per line, item = Plugin.esm|LocalHexID (as in LootMan). Items from plugins you do not have (DLC) are skipped.",
     "_comment": "List name: name_<language> by sLanguage from Fallout4.ini (name_en, name_ru, name_de ...), falls back to name_en.",
-    "_comment": "The notification is: Item (list name). An empty list name shows the item alone.",
+    "_comment": "The line is: List name Item x5. An empty list name shows the item alone.",
+    "_comment": "Icons in a list name: [grenade], [mine], [molotov] (lowercase), e.g. [grenade][grenade]. Game notifications cannot show icons and drop them.",
     "_comment": "Reload in MCM: Explosives Cycler - Reload lists.",
 
     "_comment": "Fallout4.esm|10C3C6 = Molotov Cocktail / Бутылка с коктейлем Молотова (damage 50)",
@@ -29,8 +30,8 @@
     "lists": [
         {
             "_comment": "Weak grenades: ascending damage, no Molotov cocktail",
-            "name_en": "–",
-            "name_ru": "–",
+            "name_en": "[grenade]",
+            "name_ru": "[grenade]",
             "items": [
                 "Fallout4.esm|107BD6",
                 "Fallout4.esm|0FF21D",
@@ -47,8 +48,8 @@
         },
         {
             "_comment": "Weak mines: ascending damage",
-            "name_en": "–",
-            "name_ru": "–",
+            "name_en": "[mine]",
+            "name_ru": "[mine]",
             "items": [
                 "Fallout4.esm|10C669",
                 "Fallout4.esm|0E56C2",
@@ -61,8 +62,8 @@
         },
         {
             "_comment": "Strong grenades: descending damage, no Molotov cocktail",
-            "name_en": "+",
-            "name_ru": "+",
+            "name_en": "[grenade][grenade]",
+            "name_ru": "[grenade][grenade]",
             "items": [
                 "DLCNukaWorld.esm|033905",
                 "Fallout4.esm|0E5750",
@@ -79,8 +80,8 @@
         },
         {
             "_comment": "Strong mines: descending damage",
-            "name_en": "+",
-            "name_ru": "+",
+            "name_en": "[mine][mine]",
+            "name_ru": "[mine][mine]",
             "items": [
                 "Fallout4.esm|10A340",
                 "Fallout4.esm|10A342",
@@ -93,8 +94,8 @@
         },
         {
             "_comment": "Molotov cocktail",
-            "name_en": "",
-            "name_ru": "",
+            "name_en": "[molotov]",
+            "name_ru": "[molotov]",
             "items": [
                 "Fallout4.esm|10C3C6"
             ]

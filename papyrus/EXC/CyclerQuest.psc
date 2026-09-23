@@ -70,9 +70,9 @@ Bool ShowCount = true
 Int LogLevel = 1
 Int DisplayMode = 2
 Float HideAfter = 0.0
-Float PosX = 98.0
-Float PosY = 64.5
-Int Align = 2
+Float PosX = 1.0
+Float PosY = 95.5
+Int Align = 0
 Int FontSize = 22
 Int ColorMode = 0
 
@@ -310,7 +310,7 @@ Function StepItem(Int aiDir)
     EquipAt(CurList, FindAvailable(CurList, pos, aiDir), "предмет " + aiDir)
 EndFunction
 
-; Экипировать предмет aiPos списка aiList и показать «Предмет (метка)».
+; Экипировать предмет aiPos списка aiList и показать «Метка Предмет ×N».
 ; Сначала текст, потом EquipItem: строка на экране меняется без ожидания экипировки.
 Function EquipAt(Int aiList, Int aiPos, String asWhy)
     If aiPos < 0
@@ -667,13 +667,14 @@ String Function PickName(String asEn, String asLang, Int aiIndex)
     Return Tr("list") + " " + (aiIndex + 1)
 EndFunction
 
-; Для лога: «2 (–)».
+; Для лога: «2 ([grenade])».
 String Function ListTag(Int aiList)
     Return (aiList + 1) + " (" + ListNames[aiList] + ")"
 EndFunction
 
-; Текст уведомления: «Предмет (название списка)», при пустом названии — «Предмет».
-; С количеством (MCM «Показывать количество»): «Осколочная граната ×8 (–)».
+; Текст: «Название списка Предмет», при пустом названии — «Предмет». С количеством
+; (MCM «Показывать количество»): «[grenade] Осколочная граната ×8» — метки значков
+; в названии виджет рисует значками, уведомлениям их убирает PlainText.
 String Function Label(Int aiList, Form akItem, Bool abCount = true)
     String text = NameOf(akItem)
     If abCount && ShowCount
@@ -683,7 +684,7 @@ String Function Label(Int aiList, Form akItem, Bool abCount = true)
     If name == ""
         Return text
     EndIf
-    Return text + " (" + name + ")"
+    Return name + " " + text
 EndFunction
 
 ; Число в строке после броска / подбора текущего предмета. Только в строку:
@@ -694,16 +695,16 @@ Function RefreshCount()
     EndIf
 EndFunction
 
-; Список опустел: «Предмет (–): список пуст», без предмета — «Список 1 (–) пуст».
+; Список опустел: «[grenade] Предмет: список пуст», без предмета — «[grenade] Список 1 пуст».
 String Function EmptyText(Int aiList, Form akItem)
     If akItem != None
         Return Label(aiList, akItem, false) + ": " + Tr("list_empty")
     EndIf
-    String text = Tr("list") + " " + (aiList + 1)
+    String text = Tr("list") + " " + (aiList + 1) + " " + Tr("empty")
     If ListNames[aiList] != ""
-        text += " (" + ListNames[aiList] + ")"
+        text = ListNames[aiList] + " " + text
     EndIf
-    Return text + " " + Tr("empty")
+    Return text
 EndFunction
 
 ; 0 — добавлен (или повтор), 1 — нет плагина (DLC), 2 — ошибка.
@@ -778,7 +779,7 @@ String Function Tr(String asId)
         ElseIf asId == "list"
             Return "Список"
         ElseIf asId == "sample"
-            Return "Осколочная граната (–)"
+            Return "[grenade] Осколочная граната"
         EndIf
     EndIf
     If asId == "none"
@@ -794,7 +795,7 @@ String Function Tr(String asId)
     ElseIf asId == "list"
         Return "List"
     ElseIf asId == "sample"
-        Return "Fragmentation Grenade (–)"
+        Return "[grenade] Fragmentation Grenade"
     EndIf
     Return asId
 EndFunction
@@ -805,8 +806,32 @@ Function Say(String asText)
         ShowLine(asText)
     EndIf
     If DisplayMode == DISPLAY_NOTIFY || DisplayMode == DISPLAY_LINE + DISPLAY_NOTIFY
-        Debug.Notification(asText)
+        Debug.Notification(PlainText(asText))
     EndIf
+EndFunction
+
+; Уведомления игры значков не умеют: метки [grenade] / [mine] / [molotov] убираются
+; вместе с пробелами в начале. GOEPE ReplaceStr различает регистр — метки в нижнем
+; регистре (виджет понимает любой). StrFind тоже с учётом регистра, иначе на
+; «[Grenade]» цикл не кончился бы; он возвращает число вхождений, не позицию.
+String Function PlainText(String asText)
+    String s = StripToken(asText, "[grenade]")
+    s = StripToken(s, "[mine]")
+    s = StripToken(s, "[molotov]")
+    While GardenOfEden.SubStr(s, 0, 1) == " "
+        s = GardenOfEden.SubStr(s, 1)
+    EndWhile
+    Return s
+EndFunction
+
+String Function StripToken(String asText, String asToken)
+    String s = asText
+    Int guard = 0
+    While guard < 10 && GardenOfEden.StrFind(s, asToken, 0, true) > 0
+        s = GardenOfEden.ReplaceStr(s, asToken, "")
+        guard += 1
+    EndWhile
+    Return s
 EndFunction
 
 
