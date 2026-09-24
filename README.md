@@ -7,8 +7,8 @@ the list's icons and the item, e.g. "(grenade icon)(grenade icon) Fragmentation 
 `[grenade]`, `[mine]` and `[molotov]` in a list name are drawn as icons. When the equipped explosive runs out, the next one from the same list is
 equipped; a picked up item from the current list is equipped when nothing is.
 
-Default lists: weak grenades, weak mines (ascending damage), strong grenades, strong
-mines (descending damage), Molotov cocktail. Edit them in
+Default lists: weak grenades (ascending damage), strong grenades (descending damage),
+weak mines, strong mines, Molotov cocktail. Edit them in
 `Data\ExplosivesCycler\lists-user.json` (copy of `lists-default.json`).
 
 Requirements: F4SE (with its scripts), MCM, Garden of Eden Papyrus Extender. DLC optional.

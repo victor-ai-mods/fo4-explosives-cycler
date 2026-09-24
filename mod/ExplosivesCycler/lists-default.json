@@ -47,20 +47,6 @@
             ]
         },
         {
-            "_comment": "Weak mines: ascending damage",
-            "name_en": "[mine]",
-            "name_ru": "[mine]",
-            "items": [
-                "Fallout4.esm|10C669",
-                "Fallout4.esm|0E56C2",
-                "Fallout4.esm|10A344",
-                "DLCRobot.esm|002120",
-                "Fallout4.esm|10771F",
-                "Fallout4.esm|10A342",
-                "Fallout4.esm|10A340"
-            ]
-        },
-        {
             "_comment": "Strong grenades: descending damage, no Molotov cocktail",
             "name_en": "[grenade][grenade]",
             "name_ru": "[grenade][grenade]",
@@ -76,6 +62,20 @@
                 "Fallout4.esm|0EEBED",
                 "Fallout4.esm|0FF21D",
                 "Fallout4.esm|107BD6"
+            ]
+        },
+        {
+            "_comment": "Weak mines: ascending damage",
+            "name_en": "[mine]",
+            "name_ru": "[mine]",
+            "items": [
+                "Fallout4.esm|10C669",
+                "Fallout4.esm|0E56C2",
+                "Fallout4.esm|10A344",
+                "DLCRobot.esm|002120",
+                "Fallout4.esm|10771F",
+                "Fallout4.esm|10A342",
+                "Fallout4.esm|10A340"
             ]
         },
         {

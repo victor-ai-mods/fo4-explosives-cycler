@@ -48,11 +48,12 @@ def main():
     # Метки [grenade] / [mine] / [molotov] строка на экране рисует значками (из
     # уведомлений они убираются). Решение пользователя 2026-09-23: слабые — один
     # значок, мощные — два, у Молотова — значок молотова.
+    # Порядок списков (пользователь, 2026-09-24): сначала все гранаты, потом мины.
     G, M = '[grenade]', '[mine]'
     lists = [
         ('Weak grenades: ascending damage, no Molotov cocktail', G, G, by_damage(grenades)),
-        ('Weak mines: ascending damage', M, M, by_damage(mines)),
         ('Strong grenades: descending damage, no Molotov cocktail', G + G, G + G, by_damage(grenades, reverse=True)),
+        ('Weak mines: ascending damage', M, M, by_damage(mines)),
         ('Strong mines: descending damage', M + M, M + M, by_damage(mines, reverse=True)),
         ('Molotov cocktail', '[molotov]', '[molotov]', molotov),
     ]
