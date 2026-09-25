@@ -44,6 +44,39 @@
                 "function": "PrevItem",
                 "params": []
             }
+        },
+        {
+            "id": "Group1Hotkey",
+            "desc": "$EXC_KEY_GROUP1",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "GroupKey1",
+                "params": []
+            }
+        },
+        {
+            "id": "Group2Hotkey",
+            "desc": "$EXC_KEY_GROUP2",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "GroupKey2",
+                "params": []
+            }
+        },
+        {
+            "id": "Group3Hotkey",
+            "desc": "$EXC_KEY_GROUP3",
+            "action": {
+                "type": "CallFunction",
+                "form": "ExplosivesCycler.esp|800",
+                "scriptName": "EXC:CyclerQuest",
+                "function": "GroupKey3",
+                "params": []
+            }
         }
     ]
 }

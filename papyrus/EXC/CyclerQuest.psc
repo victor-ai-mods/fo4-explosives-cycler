@@ -17,6 +17,8 @@ String Property LOG_FILE = "ExplosivesCycler.log" AutoReadOnly Hidden
 String Property LOG_FILE_PREV = "ExplosivesCycler.1.log" AutoReadOnly Hidden
 Int Property MAX_LISTS = 10 AutoReadOnly Hidden
 Int Property MAX_ITEMS = 128 AutoReadOnly Hidden
+; Группы списков — клавиши MCM «Группа 1..3» (GroupKey1..3), поле "group" в JSON.
+Int Property MAX_GROUPS = 3 AutoReadOnly Hidden
 Int Property MAX_LOG_LINES = 100 AutoReadOnly Hidden
 Int Property TIMER_REPLACE = 1 AutoReadOnly Hidden
 String Property NAME_UNSET = "<unset>" AutoReadOnly Hidden
@@ -46,6 +48,8 @@ Int ListCount = 0
 String[] ListNames
 Int[] ListStart
 Int[] ListLen
+; Группы списка — сумма 2^(группа-1): "group": "1,3" -> 5. 0 — ни в одной группе.
+Int[] ListGroups
 Form[] Items
 ; Кеш: язык, имя файла и строки файла, из которых собраны списки. Совпали — списки
 ; из сейва актуальны, разбор (сотни вызовов GOEPE) пропускается.
@@ -59,6 +63,10 @@ String LoadedFile = ""
 ; --- состояние ---
 Int CurList = -1
 Form CurItem = None
+; Последние список и предмет в каждой группе (индекс = группа - 1): клавиша группы,
+; нажатая из другой группы, возвращает к ним.
+Int[] GroupLastList
+Form[] GroupLastItem
 Bool Busy = false
 Float BusyStart = 0.0
 String Lang = "en"
@@ -118,6 +126,7 @@ Function Setup(Bool abNewInstall)
     RegisterForMenuOpenCloseEvent(HUD_MENU)
     Log("=== Explosives Cycler: запуск (новая установка = " + abNewInstall + "), язык " + Lang)
     LoadLists(false)
+    EnsureGroupMemory()
     If abNewInstall && p.GetItemCount(EXC_CycleItem) == 0
         p.AddItem(EXC_CycleItem, 1, true)
         Log("выдан предмет " + EXC_CycleItem.GetName())
@@ -229,6 +238,18 @@ Function PrevItem()
     Command(-1, false)
 EndFunction
 
+Function GroupKey1()
+    GroupCommand(1)
+EndFunction
+
+Function GroupKey2()
+    GroupCommand(2)
+EndFunction
+
+Function GroupKey3()
+    GroupCommand(3)
+EndFunction
+
 ; Кнопка MCM «Перечитать списки».
 Function McmReloadLists()
     If TryBusy()
@@ -263,6 +284,127 @@ Function Command(Int aiDir, Bool abList)
     EndIf
     Busy = false
     FlushLog()
+EndFunction
+
+Function GroupCommand(Int aiGroup)
+    If !TryBusy()
+        Return
+    EndIf
+    If ListCount == 0
+        Say(Tr("nolists"))
+    Else
+        StepGroup(aiGroup)
+    EndIf
+    Busy = false
+    FlushLog()
+EndFunction
+
+; Клавиша группы. Текущий список в этой группе — следующий непустой список группы по
+; кругу, в нём первый имеющийся предмет. Текущий список из другой группы (или его нет) —
+; последние список и предмет, выбранные в этой группе; их нет или они кончились —
+; первый непустой список группы.
+Function StepGroup(Int aiGroup)
+    Actor p = Game.GetPlayer()
+    EnsureGroupMemory()
+    Int g = aiGroup - 1
+    If FirstInGroup(aiGroup, -1, false) < 0
+        Log("группа " + aiGroup + ": ни один список в неё не входит")
+        Say(Tr("group") + " " + aiGroup + ": " + Tr("group_nolists"))
+        Return
+    EndIf
+    String why = "группа " + aiGroup
+    If CurList >= 0 && InGroup(CurList, aiGroup)
+        Int next = FirstInGroup(aiGroup, CurList, true)
+        If next >= 0
+            EquipAt(next, FindAvailable(next, -1, 1), why + ", следующий список")
+            Return
+        EndIf
+    Else
+        Int last = GroupLastList[g]
+        If last >= 0 && last < ListCount && InGroup(last, aiGroup) && p.GetItemCount(EXC_Lists[last]) > 0
+            Form item = GroupLastItem[g]
+            Int pos = FindItemPos(last, item)
+            If pos < 0 || p.GetItemCount(item) == 0
+                ; Запомненного предмета больше нет — следующий за ним имеющийся.
+                pos = FindAvailable(last, pos, 1)
+            EndIf
+            EquipAt(last, pos, why + ", возврат к последнему")
+            Return
+        EndIf
+        Int first = FirstInGroup(aiGroup, -1, true)
+        If first >= 0
+            EquipAt(first, FindAvailable(first, -1, 1), why + ", первый непустой")
+            Return
+        EndIf
+    EndIf
+    Log(why + ": во всех списках группы ничего нет")
+    Say(GroupEmptyText(aiGroup))
+EndFunction
+
+; Первый по кругу после aiAfter список группы (aiAfter = -1 — с начала); abNonEmpty —
+; только с чем-то в инвентаре. Сам aiAfter проверяется последним. Нет — -1.
+Int Function FirstInGroup(Int aiGroup, Int aiAfter, Bool abNonEmpty)
+    Actor p = Game.GetPlayer()
+    Int k = 1
+    While k <= ListCount
+        Int idx = Wrap(aiAfter + k, ListCount)
+        If InGroup(idx, aiGroup) && (!abNonEmpty || p.GetItemCount(EXC_Lists[idx]) > 0)
+            Return idx
+        EndIf
+        k += 1
+    EndWhile
+    Return -1
+EndFunction
+
+; Входит ли список в группу: бит 2^(группа-1) в ListGroups (побитовых операций в Papyrus нет).
+Bool Function InGroup(Int aiList, Int aiGroup)
+    If ListGroups == None || aiList < 0 || aiList >= ListGroups.Length
+        Return false
+    EndIf
+    Return (ListGroups[aiList] / GroupBit(aiGroup)) % 2 == 1
+EndFunction
+
+Int Function GroupBit(Int aiGroup)
+    Int bit = 1
+    Int i = 1
+    While i < aiGroup
+        bit *= 2
+        i += 1
+    EndWhile
+    Return bit
+EndFunction
+
+; Сейвы до групп (1.1.x): массивов памяти групп в них нет.
+Function EnsureGroupMemory()
+    If GroupLastList == None || GroupLastList.Length != MAX_GROUPS || GroupLastItem == None || GroupLastItem.Length != MAX_GROUPS
+        ResetGroupMemory()
+    EndIf
+EndFunction
+
+Function ResetGroupMemory()
+    GroupLastList = new Int[3]
+    GroupLastItem = new Form[3]
+    Int g = 0
+    While g < MAX_GROUPS
+        GroupLastList[g] = -1
+        g += 1
+    EndWhile
+EndFunction
+
+; Текущий список и предмет — последние во всех группах, куда входит список.
+Function RememberGroups()
+    If CurList < 0 || CurItem == None
+        Return
+    EndIf
+    EnsureGroupMemory()
+    Int g = 1
+    While g <= MAX_GROUPS
+        If InGroup(CurList, g)
+            GroupLastList[g - 1] = CurList
+            GroupLastItem[g - 1] = CurItem
+        EndIf
+        g += 1
+    EndWhile
 EndFunction
 
 ; Следующий (aiDir = 1) или предыдущий (-1) список, в котором что-то есть;
@@ -321,6 +463,7 @@ Function EquipAt(Int aiList, Int aiPos, String asWhy)
     ; (его ещё много) примет нашу же смену за ручную и сбросит отслеживание.
     CurItem = item
     CurList = aiList
+    RememberGroups()
     String text = Label(aiList, item)
     Say(text)
     Actor p = Game.GetPlayer()
@@ -380,6 +523,7 @@ Event Actor.OnItemEquipped(Actor akSender, Form akBaseObject, ObjectReference ak
     If CurList < 0 || !EXC_Lists[CurList].HasForm(akBaseObject)
         CurList = ListOf(akBaseObject)
     EndIf
+    RememberGroups()
     ; Строка без таймера всегда показывает текущий предмет — и когда игрок взял его сам.
     If changed && HideAfter <= 0.0 && DisplayMode >= DISPLAY_LINE && CurList >= 0
         ShowLine(Label(CurList, akBaseObject))
@@ -552,7 +696,8 @@ Int Function LoadLists(Bool abForce)
         Return 0
     EndIf
     String[] lines = GardenOfEden2.GetLinesFromFile(file, DATA_PATH)
-    If !abForce && ListCount > 0 && SameAsLoaded(lines, file)
+    ; ListGroups == None — сейв до групп: разобрать заново, даже если файл тот же.
+    If !abForce && ListCount > 0 && ListGroups != None && ListGroups.Length == ListCount && SameAsLoaded(lines, file)
         Log("списки не изменились (" + file + "): " + ListCount + " шт., " + Items.Length + " предметов")
         Return ListCount
     EndIf
@@ -563,6 +708,7 @@ Int Function LoadLists(Bool abForce)
     ; NAME_UNSET, а не "": пустое название в файле — законное («только имя предмета»).
     String nameEn = NAME_UNSET
     String nameLang = NAME_UNSET
+    Int groups = 0
     String keyLang = "\"name_" + Lang + "\""
     Int cur = -1
     Int extraLists = 0
@@ -588,14 +734,18 @@ Int Function LoadLists(Bool abForce)
                 ListNames.Add(PickName(nameEn, nameLang, cur))
                 ListStart.Add(Items.Length)
                 ListLen.Add(0)
+                ListGroups.Add(groups)
             Else
                 cur = -1
                 extraLists += 1
             EndIf
             nameEn = NAME_UNSET
             nameLang = NAME_UNSET
+            groups = 0
         ElseIf GardenOfEden.StrFind(line, "_comment") > 0
             ; комментарий
+        ElseIf GardenOfEden.StrFind(line, "\"group\"") > 0
+            groups = ParseGroups(line, i + 1)
         ElseIf GardenOfEden.StrFind(q, "|") > 0
             If cur >= 0
                 Int r = AddListItem(cur, q, i + 1)
@@ -621,15 +771,63 @@ Int Function LoadLists(Bool abForce)
     If CurList < 0
         CurItem = None
     EndIf
+    ; Номера списков могли смениться — память групп начинается заново.
+    ResetGroupMemory()
+    RememberGroups()
 
     Log("списки загружены из " + file + " за " + ((Utility.GetCurrentRealTime() - t0) as Int) + " с: " + ListCount + " шт., " + \
         Items.Length + " предметов; нет плагина " + missing + ", ошибок " + broken + ", лишних списков " + extraLists)
     i = 0
     While i < ListCount
-        Log("  " + ListTag(i) + ": " + ListLen[i] + " предм.")
+        Log("  " + ListTag(i) + ": " + ListLen[i] + " предм., группы " + GroupsText(i))
         i += 1
     EndWhile
     Return ListCount
+EndFunction
+
+; "group": "1,3" (или "group": 2) — цифры строки 1..MAX_GROUPS. В ключе цифр нет,
+; поэтому смотрится вся строка; запятые, пробелы и кавычки пропускаются.
+Int Function ParseGroups(String asLine, Int aiLine)
+    Int mask = 0
+    Int n = GardenOfEden.StrLength(asLine)
+    Int i = 0
+    While i < n
+        String c = GardenOfEden.SubStr(asLine, i, 1)
+        Int d = 0
+        If c == "1"
+            d = 1
+        ElseIf c == "2"
+            d = 2
+        ElseIf c == "3"
+            d = 3
+        ElseIf c == "0" || c == "4" || c == "5" || c == "6" || c == "7" || c == "8" || c == "9"
+            Log("  строка " + aiLine + ": группа " + c + " — есть только 1.." + MAX_GROUPS + ", пропущена")
+        EndIf
+        If d > 0 && (mask / GroupBit(d)) % 2 == 0
+            mask += GroupBit(d)
+        EndIf
+        i += 1
+    EndWhile
+    Return mask
+EndFunction
+
+; Для лога: «1,3», без групп — «-».
+String Function GroupsText(Int aiList)
+    String s = ""
+    Int g = 1
+    While g <= MAX_GROUPS
+        If InGroup(aiList, g)
+            If s != ""
+                s += ","
+            EndIf
+            s += g
+        EndIf
+        g += 1
+    EndWhile
+    If s == ""
+        Return "-"
+    EndIf
+    Return s
 EndFunction
 
 Bool Function SameAsLoaded(String[] akLines, String asFile)
@@ -707,6 +905,16 @@ String Function EmptyText(Int aiList, Form akItem)
     Return text
 EndFunction
 
+; Во всех списках группы пусто: «[grenade] Группа 1: ничего нет» — значки первого списка группы.
+String Function GroupEmptyText(Int aiGroup)
+    String text = Tr("group") + " " + aiGroup + ": " + Tr("group_none")
+    Int first = FirstInGroup(aiGroup, -1, false)
+    If first >= 0 && ListNames[first] != ""
+        text = ListNames[first] + " " + text
+    EndIf
+    Return text
+EndFunction
+
 ; 0 — добавлен (или повтор), 1 — нет плагина (DLC), 2 — ошибка.
 Int Function AddListItem(Int aiList, String asToken, Int aiLine)
     String[] parts = GardenOfEden2.GetCommaDelimitedStringAsArray(GardenOfEden.ReplaceStr(asToken, "|", ","))
@@ -755,6 +963,7 @@ Function ClearLists()
     ListNames = new String[0]
     ListStart = new Int[0]
     ListLen = new Int[0]
+    ListGroups = new Int[0]
     Items = new Form[0]
 EndFunction
 
@@ -780,6 +989,12 @@ String Function Tr(String asId)
             Return "Список"
         ElseIf asId == "sample"
             Return "[grenade] Осколочная граната"
+        ElseIf asId == "group"
+            Return "Группа"
+        ElseIf asId == "group_none"
+            Return "ничего нет"
+        ElseIf asId == "group_nolists"
+            Return "в неё не входит ни один список (\"group\" в lists-*.json)"
         EndIf
     EndIf
     If asId == "none"
@@ -796,6 +1011,12 @@ String Function Tr(String asId)
         Return "List"
     ElseIf asId == "sample"
         Return "[grenade] Fragmentation Grenade"
+    ElseIf asId == "group"
+        Return "Group"
+    ElseIf asId == "group_none"
+        Return "nothing left"
+    ElseIf asId == "group_nolists"
+        Return "no lists in it (\"group\" in lists-*.json)"
     EndIf
     Return asId
 EndFunction

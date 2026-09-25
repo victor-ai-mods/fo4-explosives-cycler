@@ -3,7 +3,7 @@
 
 Выход (в mod/, откуда их раскладывает tools/deploy.py):
     MCM/Config/ExplosivesCycler/config.json    — страница, все тексты токенами $EXC_*
-    MCM/Config/ExplosivesCycler/keybinds.json  — 4 клавиши -> функции EXC:CyclerQuest
+    MCM/Config/ExplosivesCycler/keybinds.json  — 7 клавиш -> функции EXC:CyclerQuest
     MCM/Config/ExplosivesCycler/settings.ini   — значения по умолчанию
     Interface/Translations/ExplosivesCycler_{en,ru}.txt — UTF-16 LE с BOM, TAB, CRLF
 
@@ -37,6 +37,11 @@ STRINGS = {
         'KEY_NEXT_ITEM_HELP': 'Equip the next item of the current list that you have, going round in a circle.',
         'KEY_PREV_ITEM': 'Previous item in the current list',
         'KEY_PREV_ITEM_HELP': 'Equip the previous item of the current list that you have, going round in a circle.',
+        'KEY_GROUP1': 'Group 1 (default: grenades and Molotov)',
+        'KEY_GROUP2': 'Group 2 (default: mines)',
+        'KEY_GROUP3': 'Group 3 (default: Molotov)',
+        'KEY_GROUP_HELP': 'From another group: the list and item last used in this group. Again: its next list '
+                          'that has something. Groups: "group" in the lists file.',
         'SEC_BEHAVIOR': 'Behavior',
         'AUTO_NEXT': 'Equip the next item when the current one runs out',
         'AUTO_NEXT_HELP': 'After the last grenade or mine is thrown, equip the next one from the same list. '
@@ -99,6 +104,11 @@ STRINGS = {
         'KEY_NEXT_ITEM_HELP': 'Экипировать следующий имеющийся предмет текущего списка, по кругу.',
         'KEY_PREV_ITEM': 'Предыдущий предмет в текущем списке',
         'KEY_PREV_ITEM_HELP': 'Экипировать предыдущий имеющийся предмет текущего списка, по кругу.',
+        'KEY_GROUP1': 'Группа 1 (по умолчанию: гранаты и Молотов)',
+        'KEY_GROUP2': 'Группа 2 (по умолчанию: мины)',
+        'KEY_GROUP3': 'Группа 3 (по умолчанию: Молотов)',
+        'KEY_GROUP_HELP': 'Из другой группы — список и предмет, выбранные в ней последними. Ещё раз — '
+                          'следующий непустой список группы. Группы — поле "group" в файле списков.',
         'SEC_BEHAVIOR': 'Поведение',
         'AUTO_NEXT': 'Брать следующий предмет, когда кончился текущий',
         'AUTO_NEXT_HELP': 'Брошена последняя граната или мина — экипировать следующую из того же списка. '
@@ -153,6 +163,9 @@ HOTKEYS = [
     ('PrevListHotkey', 'KEY_PREV_LIST', 'PrevList'),
     ('NextItemHotkey', 'KEY_NEXT_ITEM', 'NextItem'),
     ('PrevItemHotkey', 'KEY_PREV_ITEM', 'PrevItem'),
+    ('Group1Hotkey', 'KEY_GROUP1', 'GroupKey1'),
+    ('Group2Hotkey', 'KEY_GROUP2', 'GroupKey2'),
+    ('Group3Hotkey', 'KEY_GROUP3', 'GroupKey3'),
 ]
 
 SETTINGS = [
@@ -204,7 +217,9 @@ def config():
         {'type': 'section', 'text': t('SEC_KEYS')},
     ]
     for hid, key, _ in HOTKEYS:
-        content.append({'id': hid, 'type': 'hotkey', 'text': t(key), 'help': t(key + '_HELP')})
+        # У клавиш групп подсказка общая.
+        help_key = 'KEY_GROUP_HELP' if key.startswith('KEY_GROUP') else key + '_HELP'
+        content.append({'id': hid, 'type': 'hotkey', 'text': t(key), 'help': t(help_key)})
     content += [
         {'type': 'spacer'},
         {'type': 'section', 'text': t('SEC_BEHAVIOR')},

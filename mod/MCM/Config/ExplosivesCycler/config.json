@@ -42,6 +42,24 @@
             "help": "$EXC_KEY_PREV_ITEM_HELP"
         },
         {
+            "id": "Group1Hotkey",
+            "type": "hotkey",
+            "text": "$EXC_KEY_GROUP1",
+            "help": "$EXC_KEY_GROUP_HELP"
+        },
+        {
+            "id": "Group2Hotkey",
+            "type": "hotkey",
+            "text": "$EXC_KEY_GROUP2",
+            "help": "$EXC_KEY_GROUP_HELP"
+        },
+        {
+            "id": "Group3Hotkey",
+            "type": "hotkey",
+            "text": "$EXC_KEY_GROUP3",
+            "help": "$EXC_KEY_GROUP_HELP"
+        },
+        {
             "type": "spacer"
         },
         {

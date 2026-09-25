@@ -49,13 +49,15 @@ def main():
     # уведомлений они убираются). Решение пользователя 2026-09-23: слабые — один
     # значок, мощные — два, у Молотова — значок молотова.
     # Порядок списков (пользователь, 2026-09-24): сначала все гранаты, потом мины.
+    # Группы (клавиши MCM «Группа 1..3», 2026-09-25): 1 — гранаты и Молотов,
+    # 2 — мины, 3 — только Молотов.
     G, M = '[grenade]', '[mine]'
     lists = [
-        ('Weak grenades: ascending damage, no Molotov cocktail', G, G, by_damage(grenades)),
-        ('Strong grenades: descending damage, no Molotov cocktail', G + G, G + G, by_damage(grenades, reverse=True)),
-        ('Weak mines: ascending damage', M, M, by_damage(mines)),
-        ('Strong mines: descending damage', M + M, M + M, by_damage(mines, reverse=True)),
-        ('Molotov cocktail', '[molotov]', '[molotov]', molotov),
+        ('Weak grenades: ascending damage, no Molotov cocktail', G, G, '1', by_damage(grenades)),
+        ('Strong grenades: descending damage, no Molotov cocktail', G + G, G + G, '1', by_damage(grenades, reverse=True)),
+        ('Weak mines: ascending damage', M, M, '2', by_damage(mines)),
+        ('Strong mines: descending damage', M + M, M + M, '2', by_damage(mines, reverse=True)),
+        ('Molotov cocktail', '[molotov]', '[molotov]', '1,3', molotov),
     ]
 
     out = ['{',
@@ -65,6 +67,7 @@ def main():
            '    "_comment": "List name: name_<language> by sLanguage from Fallout4.ini (name_en, name_ru, name_de ...), falls back to name_en.",',
            '    "_comment": "The line is: List name Item x5. An empty list name shows the item alone.",',
            '    "_comment": "Icons in a list name: [grenade], [mine], [molotov] (lowercase), e.g. [grenade][grenade]. Game notifications cannot show icons and drop them.",',
+           '    "_comment": "Groups: \\"group\\": \\"1\\" or \\"1,3\\" (groups 1..3, before items) puts the list into groups for the MCM hotkeys Group 1..3. A group key switches between the lists of its group; pressed from another group, it returns to the list and item last used in its group. A list without \\"group\\" is reached only by Next / Previous list (these keys cycle all lists).",',
            '    "_comment": "Reload in MCM: Explosives Cycler - Reload lists.",',
            '']
     seen = set()
@@ -75,11 +78,12 @@ def main():
                 e['id'], e['name_en'], e['name_ru'], e['damage'])))
     out.append('')
     out.append('    "lists": [')
-    for li, (about, name_en, name_ru, items) in enumerate(lists):
+    for li, (about, name_en, name_ru, group, items) in enumerate(lists):
         out.append('        {')
         out.append('            "_comment": %s,' % q(about))
         out.append('            "name_en": %s,' % q(name_en))
         out.append('            "name_ru": %s,' % q(name_ru))
+        out.append('            "group": %s,' % q(group))
         out.append('            "items": [')
         for ii, e in enumerate(items):
             out.append('                %s%s' % (q(e['id']), ',' if ii + 1 < len(items) else ''))
@@ -93,8 +97,8 @@ def main():
     os.makedirs(os.path.dirname(DST), exist_ok=True)
     with open(DST, 'w', encoding='utf-8', newline='\r\n') as f:
         f.write(text)
-    for about, name_en, name_ru, items in lists:
-        print('%-18s %s' % (name_ru,', '.join('%s(%g)' % (e['name_ru'], e['damage']) for e in items)))
+    for about, name_en, name_ru, group, items in lists:
+        print('%-18s %-4s %s' % (name_ru, group,', '.join('%s(%g)' % (e['name_ru'], e['damage']) for e in items)))
     print('->', os.path.relpath(DST, ROOT))
 
 
