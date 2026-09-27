@@ -134,7 +134,7 @@ Function Setup(Bool abNewInstall)
     ; Сейв из другой сессии: клипа по сохранённому пути уже нет, EnsureWidget загрузит заново.
     WidgetPath = ""
     WidgetLoading = false
-    If HideAfter <= 0.0 && CurItem != None && CurList >= 0
+    If HideAfter <= 0.0 && DisplayMode >= DISPLAY_LINE && CurItem != None && CurList >= 0
         ShowLine(Label(CurList, CurItem))
     EndIf
     FlushLog()
@@ -1068,6 +1068,13 @@ EndFunction
 
 Function ShowLine(String asText)
     LastText = asText
+    ; Строка выключена в MCM (iDisplay «никак» / «уведомления») — не показывать ни
+    ; при каком вызове; раньше загрузка сейва показывала её без этой проверки.
+    If DisplayMode < DISPLAY_LINE
+        PendingText = ""
+        HideLine()
+        Return
+    EndIf
     If !EnsureWidget()
         PendingText = asText
         Return
