@@ -7,7 +7,7 @@
     «Кроличья лапка» отпадают сами);
   - коктейль Молотова — отдельный список, в гранатах его нет;
   - капканы и шипы Far Harbor (DLC03_Throwing*) в мины не входят;
-  - порядок: урон, при равном уроне — цена.
+  - порядок: урон с перком «Подрывник» 4 (DEMOLITION_MULT), при равном — цена.
 
 Формат файла жёсткий (его читает построчный парсер в EXC:CyclerQuest):
 одна пара ключ-значение на строке, один предмет на строке.
@@ -29,8 +29,19 @@ def usable(e):
     return e['playable'] and e['damage'] > 0 and not e['edid'].startswith('DLC03_Throwing')
 
 
+# Урон для сортировки — как с перком «Подрывник» 4: урон взрыва x2, урон
+# зачарования (импульсные, часть плазменных) без изменений. Без перка импульсная
+# и осколочная граната равны (150), с перком осколочная вдвое сильнее — Pip-Boy
+# показывает 300 и 150 (пользователь, 2026-09-28: импульсные — раньше осколочных).
+DEMOLITION_MULT = 2.0
+
+
+def sort_damage(e):
+    return e['damage_blast'] * DEMOLITION_MULT + e['damage_enchant']
+
+
 def by_damage(items, reverse=False):
-    return sorted(items, key=lambda e: (e['damage'], e['value']), reverse=reverse)
+    return sorted(items, key=lambda e: (sort_damage(e), e['value']), reverse=reverse)
 
 
 def q(text):
@@ -67,15 +78,15 @@ def main():
            '    "_comment": "List name: name_<language> by sLanguage from Fallout4.ini (name_en, name_ru, name_de ...), falls back to name_en.",',
            '    "_comment": "The line is: List name Item x5. An empty list name shows the item alone.",',
            '    "_comment": "Icons in a list name: [grenade], [mine], [molotov] (lowercase), e.g. [grenade][grenade]. Game notifications cannot show icons and drop them.",',
-           '    "_comment": "Groups: \\"group\\": \\"1\\" or \\"1,3\\" (groups 1..3, before items) puts the list into groups for the MCM hotkeys Group 1..3. A group key switches between the lists of its group; pressed from another group, it returns to the list and item last used in its group. A list without \\"group\\" is reached only by Next / Previous list (these keys cycle all lists).",',
+           '    "_comment": "Groups: \\"group\\": \\"1\\" or \\"1,3\\" (groups 1..3, before items) puts the list into groups for the MCM hotkeys Group 1..3. A group key switches between the lists of its group; pressed from another group, it takes the first list of its group that has something (MCM option: return to the list and item last used in the group instead). A list without \\"group\\" is reached only by Next / Previous list (these keys cycle all lists).",',
            '    "_comment": "Reload in MCM: Explosives Cycler - Reload lists.",',
            '']
     seen = set()
     for e in by_damage(grenades + mines + molotov):
         if e['id'] not in seen:
             seen.add(e['id'])
-            out.append('    "_comment": %s,' % q('%s = %s / %s (damage %g)' % (
-                e['id'], e['name_en'], e['name_ru'], e['damage'])))
+            out.append('    "_comment": %s,' % q('%s = %s / %s (damage %g, with Demolition Expert 4: %g)' % (
+                e['id'], e['name_en'], e['name_ru'], e['damage'], sort_damage(e))))
     out.append('')
     out.append('    "lists": [')
     for li, (about, name_en, name_ru, group, items) in enumerate(lists):
@@ -98,7 +109,7 @@ def main():
     with open(DST, 'w', encoding='utf-8', newline='\r\n') as f:
         f.write(text)
     for about, name_en, name_ru, group, items in lists:
-        print('%-18s %-4s %s' % (name_ru, group,', '.join('%s(%g)' % (e['name_ru'], e['damage']) for e in items)))
+        print('%-18s %-4s %s' % (name_ru, group,', '.join('%s(%g)' % (e['name_ru'], sort_damage(e)) for e in items)))
     print('->', os.path.relpath(DST, ROOT))
 
 

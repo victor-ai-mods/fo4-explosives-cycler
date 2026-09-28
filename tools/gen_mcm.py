@@ -40,14 +40,17 @@ STRINGS = {
         'KEY_GROUP1': 'Group 1 (default: grenades and Molotov)',
         'KEY_GROUP2': 'Group 2 (default: mines)',
         'KEY_GROUP3': 'Group 3 (default: Molotov)',
-        'KEY_GROUP_HELP': 'From another group: the list and item last used in this group. Again: its next list '
-                          'that has something. Groups: "group" in the lists file.',
+        'KEY_GROUP_HELP': 'From another group: the first list of this group that has something, its first item. '
+                          'Again: its next list that has something. Groups: "group" in the lists file.',
         'SEC_BEHAVIOR': 'Behavior',
         'AUTO_NEXT': 'Equip the next item when the current one runs out',
         'AUTO_NEXT_HELP': 'After the last grenade or mine is thrown, equip the next one from the same list. '
                           'If the list is empty, a message is shown and nothing else is equipped.',
         'EQUIP_PICKUP': 'Equip picked up items',
         'EQUIP_PICKUP_HELP': 'If nothing is equipped for throwing and you pick up a grenade or mine from the current list, equip it.',
+        'GROUP_MEMORY': 'Remember the list and item in each group',
+        'GROUP_MEMORY_HELP': 'On: a group key from another group returns to the list and item last used in that group. '
+                             'Off: always its first list and first item.',
         'SEC_DISPLAY': 'On-screen text',
         'DISPLAY': 'Show the selection',
         'DISPLAY_HELP': 'On-screen line changes instantly on every key press; notifications (top left) queue up one after another.',
@@ -107,7 +110,7 @@ STRINGS = {
         'KEY_GROUP1': 'Группа 1 (по умолчанию: гранаты и Молотов)',
         'KEY_GROUP2': 'Группа 2 (по умолчанию: мины)',
         'KEY_GROUP3': 'Группа 3 (по умолчанию: Молотов)',
-        'KEY_GROUP_HELP': 'Из другой группы — список и предмет, выбранные в ней последними. Ещё раз — '
+        'KEY_GROUP_HELP': 'Из другой группы — первый непустой список группы и его первый предмет. Ещё раз — '
                           'следующий непустой список группы. Группы — поле "group" в файле списков.',
         'SEC_BEHAVIOR': 'Поведение',
         'AUTO_NEXT': 'Брать следующий предмет, когда кончился текущий',
@@ -115,6 +118,9 @@ STRINGS = {
                           'Если список пуст, выводится сообщение, и больше ничего не экипируется.',
         'EQUIP_PICKUP': 'Экипировать подобранное',
         'EQUIP_PICKUP_HELP': 'Если для броска ничего не экипировано, а подобрана граната или мина из текущего списка, экипировать её.',
+        'GROUP_MEMORY': 'Запоминать список и предмет в группе',
+        'GROUP_MEMORY_HELP': 'Вкл.: клавиша группы из другой группы возвращает к списку и предмету, выбранным в ней последними. '
+                             'Выкл.: всегда первый список и первый предмет.',
         'SEC_DISPLAY': 'Строка на экране',
         'DISPLAY': 'Показывать выбор',
         'DISPLAY_HELP': 'Строка на экране меняется сразу при каждом нажатии; уведомления (слева вверху) идут очередью, одно за другим.',
@@ -171,6 +177,7 @@ HOTKEYS = [
 SETTINGS = [
     ('bAutoNext', 1),
     ('bEquipPickup', 1),
+    ('bGroupMemory', 0),
     ('bShowCount', 1),
     ('iLogLevel', 1),
     ('iDisplay', 2),
@@ -225,6 +232,7 @@ def config():
         {'type': 'section', 'text': t('SEC_BEHAVIOR')},
         switcher('bAutoNext', 'AUTO_NEXT'),
         switcher('bEquipPickup', 'EQUIP_PICKUP'),
+        switcher('bGroupMemory', 'GROUP_MEMORY'),
         {'type': 'spacer'},
         {'type': 'section', 'text': t('SEC_DISPLAY')},
         dropdown('iDisplay', 'DISPLAY', ['DISPLAY_OFF', 'DISPLAY_NOTIFY', 'DISPLAY_LINE', 'DISPLAY_BOTH']),

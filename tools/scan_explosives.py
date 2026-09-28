@@ -3,7 +3,9 @@
 
 Поле damage = урон взрыва + урон зачарования взрыва по Health + число дочерних
 зарядов x их урон (импульсные гранаты бьют только зачарованием, MIRV — пятью
-дочерними зарядами). Сортировка списков идёт по нему (tools/gen_lists.py).
+дочерними зарядами). Отдельно — damage_blast (урон взрывов, его умножает перк
+«Подрывник») и damage_enchant (зачарования, перк на них не действует); по ним
+сортирует tools/gen_lists.py.
 
 Запуск:  python tools/scan_explosives.py ["D:\\Games\\Fallout 4\\Data"]
 Выход:   data/explosives.json (файлы игры, в репозиторий не кладётся)
@@ -107,18 +109,22 @@ def enchant_damage(key, recs):
 
 def explosion_damage(key, recs, depth=0):
     """
-    Урон взрыва с учётом зачарования и дочерних снарядов:
-    Damage + урон ENCH по Health + Spawn.Count x урон взрыва дочернего PROJ.
+    Урон взрыва с учётом зачарования и дочерних снарядов, двумя частями:
+    (урон самих взрывов, урон зачарований по Health). Взрыв: Damage + Spawn.Count x
+    урон взрыва дочернего PROJ. Части разные, потому что перк «Подрывник»
+    (Mod Player Explosion Damage) умножает только урон взрыва, а зачарование —
+    нет (импульсные гранаты: взрыв 0, зачарование 150; Pip-Boy так и показывает).
     EXPL.DATA: Damage @28, Spawn Projectile @20, Spawn.Count @80.
     """
     if key not in recs or depth > 3:
-        return 0.0
+        return 0.0, 0.0
     p, r = recs[key]
     d = r.first(b'DATA')
-    total = struct.unpack_from('<f', d, 28)[0]
+    blast = struct.unpack_from('<f', d, 28)[0]
+    ench = 0.0
     eitm = r.first(b'EITM')
     if eitm:
-        total += enchant_damage(ref(p, struct.unpack('<I', eitm)[0]), recs)
+        ench += enchant_damage(ref(p, struct.unpack('<I', eitm)[0]), recs)
     spawn = struct.unpack_from('<I', d, 20)[0]
     count = struct.unpack_from('<I', d, 80)[0] if len(d) >= 84 else 0
     if spawn and count:
@@ -127,8 +133,10 @@ def explosion_damage(key, recs, depth=0):
             pp, pr = recs[pkey]
             pd = pr.first(b'DNAM')
             child = ref(pp, struct.unpack_from('<I', pd, 32)[0])
-            total += count * explosion_damage(child, recs, depth + 1)
-    return total
+            cb, ce = explosion_damage(child, recs, depth + 1)
+            blast += count * cb
+            ench += count * ce
+    return blast, ench
 
 
 def main():
@@ -179,6 +187,7 @@ def main():
                 expl_dmg = struct.unpack_from('<f', ed, 28)[0]
             eitm = er.first(b'EITM')
             expl_ench = ref(ep, struct.unpack('<I', eitm)[0]) if eitm else None
+        blast, ench = explosion_damage(expl_key, recs) if expl_key else (0.0, 0.0)
 
         out.append({
             'id': k,
@@ -196,7 +205,9 @@ def main():
             'explosion': expl_key,
             'explosion_edid': expl_name,
             'explosion_damage': expl_dmg,
-            'damage': round(explosion_damage(expl_key, recs), 1) if expl_key else 0.0,
+            'damage': round(blast + ench, 1),
+            'damage_blast': round(blast, 1),
+            'damage_enchant': round(ench, 1),
             'explosion_enchantment': expl_ench,
             'explosion_spawn_projectile': spawn_proj,
             'explosion_placed_object': placed,

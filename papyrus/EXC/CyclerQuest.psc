@@ -74,6 +74,9 @@ String Lang = "en"
 ; --- настройки MCM (ReadSettings: при запуске, после изменения в MCM, при закрытии меню паузы) ---
 Bool AutoNext = true
 Bool EquipPickup = true
+; Клавиша группы из другой группы: true — к последним списку и предмету группы,
+; false (по умолчанию, 1.3.0) — к первому непустому списку группы и его первому предмету.
+Bool GroupMemory = false
 Bool ShowCount = true
 Int LogLevel = 1
 Int DisplayMode = 2
@@ -144,6 +147,7 @@ Function ReadSettings()
     If MCM.IsInstalled()
         AutoNext = MCM.GetModSettingBool(MOD_NAME, "bAutoNext:Main")
         EquipPickup = MCM.GetModSettingBool(MOD_NAME, "bEquipPickup:Main")
+        GroupMemory = MCM.GetModSettingBool(MOD_NAME, "bGroupMemory:Main")
         ShowCount = MCM.GetModSettingBool(MOD_NAME, "bShowCount:Main")
         LogLevel = MCM.GetModSettingInt(MOD_NAME, "iLogLevel:Main")
         DisplayMode = MCM.GetModSettingInt(MOD_NAME, "iDisplay:Main")
@@ -159,7 +163,7 @@ EndFunction
 ; MCM: внешнее событие «OnMCMSettingChange|ExplosivesCycler» (RegisterForExternalEvent, F4SE).
 Function OnMCMSettingChange(String asModName, String asId)
     ReadSettings()
-    If asId != "bAutoNext:Main" && asId != "bEquipPickup:Main" && asId != "iLogLevel:Main"
+    If asId != "bAutoNext:Main" && asId != "bEquipPickup:Main" && asId != "bGroupMemory:Main" && asId != "iLogLevel:Main"
         PreviewPending = true
     EndIf
     Dbg("MCM: изменено " + asId)
@@ -301,8 +305,9 @@ EndFunction
 
 ; Клавиша группы. Текущий список в этой группе — следующий непустой список группы по
 ; кругу, в нём первый имеющийся предмет. Текущий список из другой группы (или его нет) —
-; последние список и предмет, выбранные в этой группе; их нет или они кончились —
-; первый непустой список группы.
+; первый непустой список группы и его первый имеющийся предмет; с MCM «Запоминать
+; список и предмет в группе» — последние список и предмет, выбранные в этой группе
+; (их нет или они кончились — первый непустой список группы).
 Function StepGroup(Int aiGroup)
     Actor p = Game.GetPlayer()
     EnsureGroupMemory()
@@ -321,7 +326,7 @@ Function StepGroup(Int aiGroup)
         EndIf
     Else
         Int last = GroupLastList[g]
-        If last >= 0 && last < ListCount && InGroup(last, aiGroup) && p.GetItemCount(EXC_Lists[last]) > 0
+        If GroupMemory && last >= 0 && last < ListCount && InGroup(last, aiGroup) && p.GetItemCount(EXC_Lists[last]) > 0
             Form item = GroupLastItem[g]
             Int pos = FindItemPos(last, item)
             If pos < 0 || p.GetItemCount(item) == 0

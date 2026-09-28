@@ -5,28 +5,28 @@
     "_comment": "List name: name_<language> by sLanguage from Fallout4.ini (name_en, name_ru, name_de ...), falls back to name_en.",
     "_comment": "The line is: List name Item x5. An empty list name shows the item alone.",
     "_comment": "Icons in a list name: [grenade], [mine], [molotov] (lowercase), e.g. [grenade][grenade]. Game notifications cannot show icons and drop them.",
-    "_comment": "Groups: \"group\": \"1\" or \"1,3\" (groups 1..3, before items) puts the list into groups for the MCM hotkeys Group 1..3. A group key switches between the lists of its group; pressed from another group, it returns to the list and item last used in its group. A list without \"group\" is reached only by Next / Previous list (these keys cycle all lists).",
+    "_comment": "Groups: \"group\": \"1\" or \"1,3\" (groups 1..3, before items) puts the list into groups for the MCM hotkeys Group 1..3. A group key switches between the lists of its group; pressed from another group, it takes the first list of its group that has something (MCM option: return to the list and item last used in the group instead). A list without \"group\" is reached only by Next / Previous list (these keys cycle all lists).",
     "_comment": "Reload in MCM: Explosives Cycler - Reload lists.",
 
-    "_comment": "Fallout4.esm|10C3C6 = Molotov Cocktail / Бутылка с коктейлем Молотова (damage 50)",
-    "_comment": "Fallout4.esm|107BD6 = Baseball Grenade / Граната из бейсбольного мяча (damage 100)",
-    "_comment": "Fallout4.esm|10C669 = Cryo Mine / Криомина (damage 100)",
-    "_comment": "Fallout4.esm|0E56C2 = Fragmentation Mine / Осколочная мина (damage 100)",
-    "_comment": "Fallout4.esm|0FF21D = Cryogenic Grenade / Криогенная граната (damage 100)",
-    "_comment": "Fallout4.esm|0EEBED = Fragmentation Grenade / Осколочная граната (damage 150)",
-    "_comment": "DLCNukaWorld.esm|0346FC = Smart Fragmentation Grenade / \"Умная\" осколочная граната (damage 150)",
-    "_comment": "Fallout4.esm|18325E = Institute EM Pulse Grenade / Институтская импульсная граната (damage 150)",
-    "_comment": "Fallout4.esm|0FF21F = Pulse Grenade / Импульсная граната (damage 150)",
-    "_comment": "Fallout4.esm|10A344 = Pulse Mine / Импульсная мина (damage 150)",
-    "_comment": "DLCRobot.esm|002120 = Pulse Mine / Импульсная мина (damage 165)",
-    "_comment": "DLCNukaWorld.esm|040CDD = Nuka Cherry Grenade / Граната с \"Ядер-Вишней\" (damage 200)",
-    "_comment": "DLCNukaWorld.esm|040CDE = Nuka Quantum Grenade / Граната с \"Квантовой Ядер-Колой\" (damage 300)",
-    "_comment": "Fallout4.esm|10771F = Bottlecap Mine / Крышко-мина (damage 300)",
-    "_comment": "Fallout4.esm|10A342 = Plasma Mine / Плазменная мина (damage 300)",
-    "_comment": "Fallout4.esm|10A33D = Plasma Grenade / Плазменная граната (damage 300)",
-    "_comment": "Fallout4.esm|0E5750 = Nuka Grenade / Молотов-кола (damage 310)",
-    "_comment": "Fallout4.esm|10A340 = Nuke Mine / Ядерная мина (damage 310)",
-    "_comment": "DLCNukaWorld.esm|033905 = Fragmentation Grenade MIRV / Разделяющаяся осколочная граната (damage 750)",
+    "_comment": "Fallout4.esm|10C3C6 = Molotov Cocktail / Бутылка с коктейлем Молотова (damage 50, with Demolition Expert 4: 100)",
+    "_comment": "Fallout4.esm|18325E = Institute EM Pulse Grenade / Институтская импульсная граната (damage 150, with Demolition Expert 4: 150)",
+    "_comment": "Fallout4.esm|0FF21F = Pulse Grenade / Импульсная граната (damage 150, with Demolition Expert 4: 150)",
+    "_comment": "Fallout4.esm|10A344 = Pulse Mine / Импульсная мина (damage 150, with Demolition Expert 4: 150)",
+    "_comment": "DLCRobot.esm|002120 = Pulse Mine / Импульсная мина (damage 165, with Demolition Expert 4: 165)",
+    "_comment": "Fallout4.esm|107BD6 = Baseball Grenade / Граната из бейсбольного мяча (damage 100, with Demolition Expert 4: 200)",
+    "_comment": "Fallout4.esm|10C669 = Cryo Mine / Криомина (damage 100, with Demolition Expert 4: 200)",
+    "_comment": "Fallout4.esm|0E56C2 = Fragmentation Mine / Осколочная мина (damage 100, with Demolition Expert 4: 200)",
+    "_comment": "Fallout4.esm|0FF21D = Cryogenic Grenade / Криогенная граната (damage 100, with Demolition Expert 4: 200)",
+    "_comment": "Fallout4.esm|0EEBED = Fragmentation Grenade / Осколочная граната (damage 150, with Demolition Expert 4: 300)",
+    "_comment": "DLCNukaWorld.esm|0346FC = Smart Fragmentation Grenade / \"Умная\" осколочная граната (damage 150, with Demolition Expert 4: 300)",
+    "_comment": "DLCNukaWorld.esm|040CDD = Nuka Cherry Grenade / Граната с \"Ядер-Вишней\" (damage 200, with Demolition Expert 4: 400)",
+    "_comment": "Fallout4.esm|10A342 = Plasma Mine / Плазменная мина (damage 300, with Demolition Expert 4: 450)",
+    "_comment": "Fallout4.esm|10A33D = Plasma Grenade / Плазменная граната (damage 300, with Demolition Expert 4: 450)",
+    "_comment": "DLCNukaWorld.esm|040CDE = Nuka Quantum Grenade / Граната с \"Квантовой Ядер-Колой\" (damage 300, with Demolition Expert 4: 600)",
+    "_comment": "Fallout4.esm|10771F = Bottlecap Mine / Крышко-мина (damage 300, with Demolition Expert 4: 600)",
+    "_comment": "Fallout4.esm|0E5750 = Nuka Grenade / Молотов-кола (damage 310, with Demolition Expert 4: 610)",
+    "_comment": "Fallout4.esm|10A340 = Nuke Mine / Ядерная мина (damage 310, with Demolition Expert 4: 610)",
+    "_comment": "DLCNukaWorld.esm|033905 = Fragmentation Grenade MIRV / Разделяющаяся осколочная граната (damage 750, with Demolition Expert 4: 1500)",
 
     "lists": [
         {
@@ -35,15 +35,15 @@
             "name_ru": "[grenade]",
             "group": "1",
             "items": [
+                "Fallout4.esm|18325E",
+                "Fallout4.esm|0FF21F",
                 "Fallout4.esm|107BD6",
                 "Fallout4.esm|0FF21D",
                 "Fallout4.esm|0EEBED",
                 "DLCNukaWorld.esm|0346FC",
-                "Fallout4.esm|18325E",
-                "Fallout4.esm|0FF21F",
                 "DLCNukaWorld.esm|040CDD",
-                "DLCNukaWorld.esm|040CDE",
                 "Fallout4.esm|10A33D",
+                "DLCNukaWorld.esm|040CDE",
                 "Fallout4.esm|0E5750",
                 "DLCNukaWorld.esm|033905"
             ]
@@ -56,15 +56,15 @@
             "items": [
                 "DLCNukaWorld.esm|033905",
                 "Fallout4.esm|0E5750",
-                "Fallout4.esm|10A33D",
                 "DLCNukaWorld.esm|040CDE",
+                "Fallout4.esm|10A33D",
                 "DLCNukaWorld.esm|040CDD",
-                "Fallout4.esm|18325E",
-                "Fallout4.esm|0FF21F",
                 "DLCNukaWorld.esm|0346FC",
                 "Fallout4.esm|0EEBED",
                 "Fallout4.esm|0FF21D",
-                "Fallout4.esm|107BD6"
+                "Fallout4.esm|107BD6",
+                "Fallout4.esm|18325E",
+                "Fallout4.esm|0FF21F"
             ]
         },
         {
@@ -73,12 +73,12 @@
             "name_ru": "[mine]",
             "group": "2",
             "items": [
-                "Fallout4.esm|10C669",
-                "Fallout4.esm|0E56C2",
                 "Fallout4.esm|10A344",
                 "DLCRobot.esm|002120",
-                "Fallout4.esm|10771F",
+                "Fallout4.esm|10C669",
+                "Fallout4.esm|0E56C2",
                 "Fallout4.esm|10A342",
+                "Fallout4.esm|10771F",
                 "Fallout4.esm|10A340"
             ]
         },
@@ -89,12 +89,12 @@
             "group": "2",
             "items": [
                 "Fallout4.esm|10A340",
-                "Fallout4.esm|10A342",
                 "Fallout4.esm|10771F",
-                "DLCRobot.esm|002120",
-                "Fallout4.esm|10A344",
+                "Fallout4.esm|10A342",
                 "Fallout4.esm|10C669",
-                "Fallout4.esm|0E56C2"
+                "Fallout4.esm|0E56C2",
+                "DLCRobot.esm|002120",
+                "Fallout4.esm|10A344"
             ]
         },
         {

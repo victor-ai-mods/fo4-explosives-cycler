@@ -85,6 +85,15 @@
             }
         },
         {
+            "id": "bGroupMemory:Main",
+            "type": "switcher",
+            "text": "$EXC_GROUP_MEMORY",
+            "help": "$EXC_GROUP_MEMORY_HELP",
+            "valueOptions": {
+                "sourceType": "ModSettingBool"
+            }
+        },
+        {
             "type": "spacer"
         },
         {
